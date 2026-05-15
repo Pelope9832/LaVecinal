@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Admin — La Vecinal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --rojo: #c0392b;
+      --amarillo: #f39c12;
+      --amarillo-claro: #f1c40f;
+      --verde: #27ae60;
+      --azul: #2980b9;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #1a1a2e;
+      color: #eee;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 16px 80px;
+    }
+
+    /* ── LOGIN ── */
+    #loginScreen {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 80vh; gap: 20px;
+    }
+    #loginScreen h1 { font-family:'Bangers',cursive; font-size:2.5rem; color:var(--amarillo); letter-spacing:3px; }
+    #loginScreen p  { color:#aaa; font-size:.9rem; }
+    #loginScreen input {
+      padding:12px 20px; border-radius:50px; border:2px solid #444;
+      background:#0f0f1a; color:white; font-size:1rem; width:260px;
+      text-align:center; font-family:'Nunito',sans-serif; outline:none;
+    }
+    #loginScreen input:focus { border-color:var(--amarillo); }
+    .btn-login {
+      padding:12px 32px; border-radius:50px; border:none; background:var(--rojo);
+      color:white; font-family:'Nunito',sans-serif; font-weight:900; font-size:1rem; cursor:pointer;
+      transition: opacity .15s;
+    }
+    .btn-login:hover { opacity:.85; }
+    #loginError { color:#e74c3c; font-size:.85rem; display:none; }
+
+    /* ── PANEL ── */
+    #adminPanel { display:none; width:100%; max-width:820px; }
+
+    header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
+    header h1 { font-family:'Bangers',cursive; font-size:2rem; color:var(--amarillo); letter-spacing:2px; }
+
+    .top-actions { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:22px; align-items:center; }
+
+    /* botones */
+    .btn {
+      border:none; border-radius:50px; padding:10px 22px;
+      font-family:'Nunito',sans-serif; font-weight:900; font-size:.88rem;
+      cursor:pointer; transition:opacity .15s, transform .1s; white-space:nowrap; text-decoration:none; display:inline-block;
+    }
+    .btn:hover  { opacity:.85; }
+    .btn:active { transform:scale(.94); }
+    .btn-red    { background:var(--rojo);    color:white; box-shadow:0 3px 10px rgba(192,57,43,.4); }
+    .btn-blue   { background:var(--azul);    color:white; }
+    .btn-ghost  { background:#2a2a4a; color:#aaa; }
+    .btn-ghost:hover { background:#3a3a5a; color:white; }
+    .btn-sm { padding:5px 13px; font-size:.76rem; border-radius:50px; }
+
+    #saveMsg { color:var(--verde); font-weight:700; font-size:.9rem; display:none; }
+
+    /* ── CATEGORÍA ── */
+    .admin-section {
+      background:#16213e; border-radius:16px; padding:18px 18px 14px;
+      margin-bottom:16px; border:1px solid #2a2a4a;
+    }
+    .section-header {
+      display:flex; align-items:center; gap:10px; margin-bottom:14px;
+      padding-bottom:10px; border-bottom:2px dashed #2a2a4a; flex-wrap:wrap;
+    }
+    .section-header-left { display:flex; align-items:center; gap:8px; flex:1; min-width:200px; }
+
+    .cat-emoji-input {
+      width:50px; padding:6px; background:#0f0f1a; border:1px solid #333;
+      border-radius:8px; color:white; font-size:1.25rem; text-align:center;
+      font-family:'Nunito',sans-serif; outline:none;
+    }
+    .cat-name-input {
+      flex:1; padding:8px 12px; background:#0f0f1a; border:1px solid #333;
+      border-radius:8px; color:white; font-family:'Nunito',sans-serif;
+      font-size:.95rem; font-weight:700; outline:none;
+    }
+    .cat-emoji-input:focus, .cat-name-input:focus { border-color:var(--amarillo); }
+
+    .section-actions { display:flex; gap:6px; flex-wrap:wrap; }
+    .btn-move {
+      background:#2a2a4a; border:none; color:#aaa; border-radius:50px;
+      padding:5px 12px; cursor:pointer; font-size:.8rem; font-weight:800;
+      transition:background .15s;
+    }
+    .btn-move:hover { background:#3a3a5a; color:white; }
+    .btn-del-cat {
+      background:#3a0d0d; border:1px solid #6b1818; color:#ff8a8a;
+      border-radius:50px; padding:5px 13px; cursor:pointer;
+      font-size:.78rem; font-weight:800; transition:background .15s;
+    }
+    .btn-del-cat:hover { background:#5a1010; }
+
+    /* ── PRODUCTO ── */
+    .product-row {
+      display:grid; grid-template-columns:2fr 90px 52px auto;
+      gap:8px; align-items:center; margin-bottom:8px;
+      background:#0f0f1a; border-radius:10px; padding:8px 10px;
+    }
+    .field-group label { font-size:.68rem; color:#777; display:block; margin-bottom:2px; }
+    .field-group input {
+      width:100%; padding:6px 8px; border-radius:7px; border:1px solid #2a2a4a;
+      background:#1a1a2e; color:white; font-family:'Nunito',sans-serif;
+      font-size:.85rem; outline:none; transition:border-color .15s;
+    }
+    .field-group input:focus { border-color:var(--amarillo); }
+
+    .btn-del-product {
+      background:none; border:1px solid #5a1a1a; color:#e74c3c;
+      border-radius:8px; padding:5px 9px; cursor:pointer; font-size:.8rem;
+      transition:background .15s;
+    }
+    .btn-del-product:hover { background:rgba(231,76,60,.15); }
+
+    .btn-add-product {
+      background:none; border:2px dashed #2a2a4a; color:#555;
+      border-radius:9px; padding:7px 14px; cursor:pointer;
+      font-family:'Nunito',sans-serif; font-weight:700; font-size:.8rem;
+      transition:all .15s; width:100%; margin-top:6px;
+    }
+    .btn-add-product:hover { border-color:var(--amarillo); color:var(--amarillo); }
+
+    /* ── EXPORT ── */
+    #exportNotice {
+      background:#0f3460; border:1px solid #1a6ca8; border-radius:12px;
+      padding:14px 18px; font-size:.83rem; line-height:1.65; color:#aad4f5;
+      margin-bottom:22px; display:none;
+    }
+    #exportNotice code {
+      background:#0a2540; padding:2px 6px; border-radius:4px;
+      font-family:monospace; font-size:.8rem;
+    }
+    #exportNotice pre {
+      background:#0a2540; border-radius:8px; padding:12px; margin-top:10px;
+      overflow-x:auto; font-size:.7rem; color:#7ec8e3;
+      white-space:pre-wrap; word-break:break-all; max-height:280px;
+    }
+
+    @media (max-width:520px) {
+      .product-row { grid-template-columns:1fr 80px auto; }
+      .product-row .field-group:nth-child(3) { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="loginScreen">
+  <h1>🔐 Panel Admin</h1>
+  <p>Introduce la contraseña para continuar</p>
+  <input type="password" id="passwordInput" placeholder="Contraseña…"
+    onkeydown="if(event.key==='Enter') checkPassword()" />
+  <button class="btn-login" onclick="checkPassword()">Entrar</button>
+  <span id="loginError">Contraseña incorrecta</span>
+</div>
+
+<!-- ── PANEL ── -->
+<div id="adminPanel">
+  <header>
+    <h1>⚙️ Panel — La Vecinal</h1>
+    <a class="btn btn-ghost" href="index.html">← Ver carta</a>
+  </header>
+
+  <div class="top-actions">
+    <button class="btn btn-red"  onclick="saveAndExport()">💾 Guardar y exportar código</button>
+    <button class="btn btn-blue" onclick="addCategory()">＋ Nueva categoría</button>
+    <span id="saveMsg">✓ ¡Exportado!</span>
+  </div>
+
+  <div id="exportNotice"></div>
+  <div id="categoriesContainer"></div>
+</div>
+
+<script>
+// ─── CONTRASEÑA — cámbiala antes de subir ─────────────────
+const ADMIN_PASSWORD = 'caseta2025';
+
+function checkPassword() {
+  if (document.getElementById('passwordInput').value === ADMIN_PASSWORD) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display  = 'block';
+    initAdmin();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+// ─── DATOS ────────────────────────────────────────────────
+let categories = [
+  {
+    id:'montados', emoji:'🥖', label:'Montados',
+    products:[
+      {id:'m-chorizo',  name:'Montado Chorizo',            price:4.00, emoji:'🌶️'},
+      {id:'m-lomo',     name:'Montado Lomo',               price:4.00, emoji:'🥩'},
+      {id:'m-panceta',  name:'Montado Panceta',            price:4.00, emoji:'🥓'},
+      {id:'m-tortilla', name:'Montado Tortilla',           price:3.50, emoji:'🍳'},
+      {id:'m-queso',    name:'Suplemento queso (montado)', price:0.50, emoji:'🧀'},
+    ]
+  },
+  {
+    id:'bocadillos', emoji:'🥪', label:'Bocadillos',
+    products:[
+      {id:'b-chorizo',  name:'Bocadillo Chorizo',            price:5.00, emoji:'🌶️'},
+      {id:'b-lomo',     name:'Bocadillo Lomo',               price:5.00, emoji:'🥩'},
+      {id:'b-panceta',  name:'Bocadillo Panceta',            price:5.00, emoji:'🥓'},
+      {id:'b-tortilla', name:'Bocadillo Tortilla',           price:4.00, emoji:'🍳'},
+      {id:'b-queso',    name:'Suplemento queso (bocadillo)', price:0.50, emoji:'🧀'},
+    ]
+  },
+  {
+    id:'otros', emoji:'🍔', label:'Otros Platos',
+    products:[
+      {id:'o-hamburguesa', name:'Hamburguesa',              price:5.50, emoji:'🍔'},
+      {id:'o-hambvegana',  name:'Hamburguesa Vegana',       price:5.50, emoji:'🌱'},
+      {id:'o-pincho',      name:'Pincho Moruno',            price:3.00, emoji:'🍢'},
+      {id:'o-queso',       name:'Suplemento queso (otros)', price:0.50, emoji:'🧀'},
+    ]
+  },
+  {
+    id:'refrescos', emoji:'🥤', label:'Refrescos',
+    products:[
+      {id:'r-cocacola', name:'Coca-Cola',      price:1.50, emoji:'🥤'},
+      {id:'r-colazero', name:'Coca-Cola Zero', price:1.50, emoji:'🖤'},
+      {id:'r-fanta',    name:'Fanta',          price:1.50, emoji:'🍊'},
+      {id:'r-aquarius', name:'Aquarius',       price:1.50, emoji:'💧'},
+    ]
+  },
+  {
+    id:'vino', emoji:'🍷', label:'Vinos',
+    products:[
+      {id:'v-tintoverano', name:'Mini Tinto de Verano', price:6.00, emoji:'🍷'},
+      {id:'v-calimocho',   name:'Mini Calimocho',       price:6.00, emoji:'🍹'},
+    ]
+  },
+  {
+    id:'cerveza', emoji:'🍺', label:'Cerveza',
+    products:[
+      {id:'c-sinalcohol', name:'Cerveza Sin Alcohol', price:2.00, emoji:'🫗'},
+      {id:'c-doble',      name:'Cerveza Doble',       price:3.00, emoji:'🍺'},
+      {id:'c-mini',       name:'Mini Cerveza',        price:6.00, emoji:'🍻'},
+    ]
+  },
+  {
+    id:'merch', emoji:'👕', label:'Merchandising',
+    products:[
+      {id:'merch-palestina',    name:'Palestina',                     price:6.00,  emoji:'🏳️'},
+      {id:'merch-camvecinal',   name:'Camiseta Vecinal',              price:12.00, emoji:'👕'},
+      {id:'merch-camsindicato', name:'Camiseta Sindicato Inquilinos', price:12.00, emoji:'✊'},
+    ]
+  },
+];
+
+// ─── RENDER ───────────────────────────────────────────────
+function initAdmin() { renderAll(); }
+
+function renderAll() {
+  const container = document.getElementById('categoriesContainer');
+  container.innerHTML = '';
+  categories.forEach((cat, ci) => {
+    const section = document.createElement('div');
+    section.className = 'admin-section';
+
+    section.innerHTML = `
+      <div class="section-header">
+        <div class="section-header-left">
+          <input class="cat-emoji-input" type="text" maxlength="4"
+            value="${escAttr(cat.emoji)}"
+            oninput="categories[${ci}].emoji=this.value" title="Emoji" />
+          <input class="cat-name-input" type="text"
+            value="${escAttr(cat.label)}"
+            oninput="categories[${ci}].label=this.value" placeholder="Nombre de la categoría" />
+        </div>
+        <div class="section-actions">
+          <button class="btn-move" onclick="moveCat(${ci},-1)" title="Subir">↑</button>
+          <button class="btn-move" onclick="moveCat(${ci},1)"  title="Bajar">↓</button>
+          <button class="btn-del-cat" onclick="deleteCat(${ci})">✕ Eliminar categoría</button>
+        </div>
+      </div>
+      <div class="products-list" id="plist-${ci}"></div>
+      <button class="btn-add-product" onclick="addProduct(${ci})">＋ Añadir producto</button>
+    `;
+
+    container.appendChild(section);
+    cat.products.forEach((_, pi) => appendProductRow(ci, pi));
+  });
+}
+
+function appendProductRow(ci, pi) {
+  const list = document.getElementById(`plist-${ci}`);
+  if (!list) return;
+  const p = categories[ci].products[pi];
+  const row = document.createElement('div');
+  row.className = 'product-row';
+  row.innerHTML = `
+    <div class="field-group">
+      <label>Nombre</label>
+      <input type="text" value="${escAttr(p.name)}"
+        oninput="categories[${ci}].products[${pi}].name=this.value" />
+    </div>
+    <div class="field-group">
+      <label>Precio (€)</label>
+      <input type="number" step="0.01" min="0" value="${p.price}"
+        oninput="categories[${ci}].products[${pi}].price=parseFloat(this.value)||0" />
+    </div>
+    <div class="field-group">
+      <label>Emoji</label>
+      <input type="text" maxlength="4" value="${escAttr(p.emoji)}"
+        oninput="categories[${ci}].products[${pi}].emoji=this.value" />
+    </div>
+    <button class="btn-del-product" onclick="delProduct(${ci},${pi})" title="Eliminar">✕</button>
+  `;
+  list.appendChild(row);
+}
+
+// ─── ACCIONES ─────────────────────────────────────────────
+function addCategory() {
+  categories.push({ id:'cat'+Date.now(), emoji:'🆕', label:'Nueva categoría', products:[] });
+  renderAll();
+  window.scrollTo({ top:document.body.scrollHeight, behavior:'smooth' });
+}
+
+function deleteCat(ci) {
+  if (!confirm(`¿Eliminar la categoría "${categories[ci].label}" y todos sus productos?`)) return;
+  categories.splice(ci, 1);
+  renderAll();
+}
+
+function moveCat(ci, dir) {
+  const t = ci + dir;
+  if (t < 0 || t >= categories.length) return;
+  [categories[ci], categories[t]] = [categories[t], categories[ci]];
+  renderAll();
+}
+
+function addProduct(ci) {
+  categories[ci].products.push({ id:'p'+Date.now(), name:'Nuevo producto', price:0.00, emoji:'🆕' });
+  const pi = categories[ci].products.length - 1;
+  appendProductRow(ci, pi);
+}
+
+function delProduct(ci, pi) {
+  if (!confirm(`¿Eliminar "${categories[ci].products[pi].name}"?`)) return;
+  categories[ci].products.splice(pi, 1);
+  renderAll();
+}
+
+// ─── EXPORTAR ─────────────────────────────────────────────
+function saveAndExport() {
+  let navHTML = '';
+  let mainHTML = '';
+
+  categories.forEach((cat, ci) => {
+    const fullLabel = cat.emoji + ' ' + cat.label;
+    navHTML += `    <button class="nav-btn${ci===0?' active':''}" data-target="${cat.id}">${escHTML(fullLabel)}</button>\n`;
+
+    let cards = '';
+    cat.products.forEach(p => {
+      const isSupp = p.price < 1;
+      const priceStr = p.price.toLocaleString('es-ES', {minimumFractionDigits:2}) + ' €';
+      const priceDisp = (isSupp ? '+' : '') + priceStr;
+      cards += `
+        <div class="product-card${isSupp?' supplement':''}" data-id="${p.id}" data-price="${p.price.toFixed(2)}" data-name="${escAttr(p.name)}">
+          <div class="product-img">${p.emoji}</div>
+          <div class="product-info">
+            <h3>${escHTML(p.name)}</h3>
+            <span class="price">${priceDisp}</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('${p.id}',-1)">−</button>
+            <span class="qty" id="qty-${p.id}">0</span>
+            <button class="btn-plus" onclick="change('${p.id}',1)">+</button>
+          </div>
+        </div>`;
+    });
+
+    mainHTML += `
+    <section class="category-section${ci===0?' active':''}" id="${cat.id}">
+      <h2 class="section-title">${escHTML(fullLabel)}</h2>
+      <div class="products-grid">${cards}
+      </div>
+    </section>`;
+  });
+
+  const code = `<!-- ═══ NAV: reemplaza el <nav class="category-nav"> ═══ -->
+<nav class="category-nav" id="categoryNav">
+${navHTML}</nav>
+
+<!-- ═══ MAIN: reemplaza el <main id="mainContent"> ═══ -->
+<main id="mainContent">
+${mainHTML}
+</main>`;
+
+  const notice = document.getElementById('exportNotice');
+  notice.style.display = 'block';
+  notice.innerHTML = `
+    <strong>📋 Código listo para copiar</strong><br><br>
+    Abre <code>index.html</code> y reemplaza:<br>
+    &nbsp;• <code>&lt;nav class="category-nav"&gt;…&lt;/nav&gt;</code><br>
+    &nbsp;• <code>&lt;main id="mainContent"&gt;…&lt;/main&gt;</code><br><br>
+    <em>Recuerda también actualizar el array <code>categories</code> dentro de este <code>admin.html</code>
+    para que recuerde los cambios la próxima vez que lo abras.</em>
+    <pre id="exportCode">${escHTML(code)}</pre>
+    <button onclick="copyCode()" style="background:var(--verde);border:none;color:white;padding:8px 18px;border-radius:50px;cursor:pointer;font-weight:800;margin-top:8px;">📋 Copiar todo</button>
+  `;
+
+  const msg = document.getElementById('saveMsg');
+  msg.style.display = 'inline';
+  setTimeout(() => msg.style.display = 'none', 2500);
+  notice.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function copyCode() {
+  const el = document.getElementById('exportCode');
+  if (el) navigator.clipboard.writeText(el.innerText).catch(() => {});
+}
+
+function escHTML(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(s) { return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+</script>
+</body>
+</html>

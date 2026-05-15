@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#c0392b" />
+  <meta name="description" content="Caseta de La Vecinal — Carta y Calculadora de precios · Bilbao" />
+  <title>La Vecinal 🎉 · Bilbao</title>
+  <!-- Favicon emoji 🎉 — funciona en todos los navegadores modernos -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎉</text></svg>" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-left">
+        <!-- Logo: pon tu imagen en la carpeta del proyecto con el nombre "logo.png"
+             y descomenta la línea de abajo (borra o comenta la línea del emoji) -->
+        <!-- <img src="logo.png" alt="Logo La Vecinal" class="header-logo" /> -->
+        <div class="header-logo-placeholder" aria-hidden="true">🏘️</div>
+        <div class="header-text">
+          <h1>La Vecinal</h1>
+          <p class="tagline">Somos de <s>barrio bien</s> bien de barrio · Asociación de Vecinos Barrio de Bilbao</p>
+        </div>
+      </div>
+      <div class="total-badge" id="totalBadge">
+        <span class="total-label">Total</span>
+        <span class="total-amount" id="totalAmount">0,00 €</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="category-nav" id="categoryNav">
+    <button class="nav-btn active" data-target="montados">🥖 Montados</button>
+    <button class="nav-btn" data-target="bocadillos">🥪 Bocadillos</button>
+    <button class="nav-btn" data-target="otros">🍔 Otros platos</button>
+    <button class="nav-btn" data-target="refrescos">🥤 Refrescos</button>
+    <button class="nav-btn" data-target="vino">🍷 Vinos</button>
+    <button class="nav-btn" data-target="cerveza">🍺 Cerveza</button>
+    <button class="nav-btn" data-target="merch">👕 Merch</button>
+  </nav>
+
+  <main id="mainContent">
+
+    <!-- MONTADOS -->
+    <section class="category-section active" id="montados">
+      <h2 class="section-title">🥖 Montados</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="m-chorizo" data-price="4.00" data-name="Montado Chorizo">
+          <div class="product-img">🌶️</div>
+          <div class="product-info">
+            <h3>Chorizo</h3>
+            <span class="price">4,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('m-chorizo',-1)">−</button>
+            <span class="qty" id="qty-m-chorizo">0</span>
+            <button class="btn-plus" onclick="change('m-chorizo',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="m-lomo" data-price="4.00" data-name="Montado Lomo">
+          <div class="product-img">🥩</div>
+          <div class="product-info">
+            <h3>Lomo</h3>
+            <span class="price">4,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('m-lomo',-1)">−</button>
+            <span class="qty" id="qty-m-lomo">0</span>
+            <button class="btn-plus" onclick="change('m-lomo',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="m-panceta" data-price="4.00" data-name="Montado Panceta">
+          <div class="product-img">🥓</div>
+          <div class="product-info">
+            <h3>Panceta</h3>
+            <span class="price">4,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('m-panceta',-1)">−</button>
+            <span class="qty" id="qty-m-panceta">0</span>
+            <button class="btn-plus" onclick="change('m-panceta',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="m-tortilla" data-price="3.50" data-name="Montado Tortilla">
+          <div class="product-img">🍳</div>
+          <div class="product-info">
+            <h3>Tortilla</h3>
+            <span class="price">3,50 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('m-tortilla',-1)">−</button>
+            <span class="qty" id="qty-m-tortilla">0</span>
+            <button class="btn-plus" onclick="change('m-tortilla',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card supplement" data-id="m-queso" data-price="0.50" data-name="Suplemento queso (montado)">
+          <div class="product-img">🧀</div>
+          <div class="product-info">
+            <h3>+ Queso</h3>
+            <span class="price">+0,50 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('m-queso',-1)">−</button>
+            <span class="qty" id="qty-m-queso">0</span>
+            <button class="btn-plus" onclick="change('m-queso',1)">+</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- BOCADILLOS -->
+    <section class="category-section" id="bocadillos">
+      <h2 class="section-title">🥪 Bocadillos</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="b-chorizo" data-price="5.00" data-name="Bocadillo Chorizo">
+          <div class="product-img">🌶️</div>
+          <div class="product-info">
+            <h3>Chorizo</h3>
+            <span class="price">5,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('b-chorizo',-1)">−</button>
+            <span class="qty" id="qty-b-chorizo">0</span>
+            <button class="btn-plus" onclick="change('b-chorizo',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="b-lomo" data-price="5.00" data-name="Bocadillo Lomo">
+          <div class="product-img">🥩</div>
+          <div class="product-info">
+            <h3>Lomo</h3>
+            <span class="price">5,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('b-lomo',-1)">−</button>
+            <span class="qty" id="qty-b-lomo">0</span>
+            <button class="btn-plus" onclick="change('b-lomo',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="b-panceta" data-price="5.00" data-name="Bocadillo Panceta">
+          <div class="product-img">🥓</div>
+          <div class="product-info">
+            <h3>Panceta</h3>
+            <span class="price">5,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('b-panceta',-1)">−</button>
+            <span class="qty" id="qty-b-panceta">0</span>
+            <button class="btn-plus" onclick="change('b-panceta',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="b-tortilla" data-price="4.00" data-name="Bocadillo Tortilla">
+          <div class="product-img">🍳</div>
+          <div class="product-info">
+            <h3>Tortilla</h3>
+            <span class="price">4,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('b-tortilla',-1)">−</button>
+            <span class="qty" id="qty-b-tortilla">0</span>
+            <button class="btn-plus" onclick="change('b-tortilla',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card supplement" data-id="b-queso" data-price="0.50" data-name="Suplemento queso (bocadillo)">
+          <div class="product-img">🧀</div>
+          <div class="product-info">
+            <h3>+ Queso</h3>
+            <span class="price">+0,50 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('b-queso',-1)">−</button>
+            <span class="qty" id="qty-b-queso">0</span>
+            <button class="btn-plus" onclick="change('b-queso',1)">+</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- OTROS PLATOS -->
+    <section class="category-section" id="otros">
+      <h2 class="section-title">🍔 Otros Platos</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="o-hamburguesa" data-price="5.50" data-name="Hamburguesa">
+          <div class="product-img">🍔</div>
+          <div class="product-info">
+            <h3>Hamburguesa</h3>
+            <span class="price">5,50 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('o-hamburguesa',-1)">−</button>
+            <span class="qty" id="qty-o-hamburguesa">0</span>
+            <button class="btn-plus" onclick="change('o-hamburguesa',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="o-hambvegana" data-price="5.50" data-name="Hamburguesa Vegana">
+          <div class="product-img">🌱</div>
+          <div class="product-info">
+            <h3>Hambur. Vegana</h3>
+            <span class="price">5,50 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('o-hambvegana',-1)">−</button>
+            <span class="qty" id="qty-o-hambvegana">0</span>
+            <button class="btn-plus" onclick="change('o-hambvegana',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="o-pincho" data-price="3.00" data-name="Pincho Moruno">
+          <div class="product-img">🍢</div>
+          <div class="product-info">
+            <h3>Pincho Moruno</h3>
+            <span class="price">3,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('o-pincho',-1)">−</button>
+            <span class="qty" id="qty-o-pincho">0</span>
+            <button class="btn-plus" onclick="change('o-pincho',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card supplement" data-id="o-queso" data-price="0.50" data-name="Suplemento queso (otros)">
+          <div class="product-img">🧀</div>
+          <div class="product-info">
+            <h3>+ Queso</h3>
+            <span class="price">+0,50 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('o-queso',-1)">−</button>
+            <span class="qty" id="qty-o-queso">0</span>
+            <button class="btn-plus" onclick="change('o-queso',1)">+</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- REFRESCOS -->
+    <section class="category-section" id="refrescos">
+      <h2 class="section-title">🥤 Refrescos</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="r-cocacola" data-price="1.50" data-name="Coca-Cola">
+          <div class="product-img">🥤</div>
+          <div class="product-info">
+            <h3>Coca-Cola</h3>
+            <span class="price">1,50 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('r-cocacola',-1)">−</button>
+            <span class="qty" id="qty-r-cocacola">0</span>
+            <button class="btn-plus" onclick="change('r-cocacola',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="r-colazero" data-price="1.50" data-name="Coca-Cola Zero">
+          <div class="product-img">🖤</div>
+          <div class="product-info">
+            <h3>Coca-Cola Zero</h3>
+            <span class="price">1,50 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('r-colazero',-1)">−</button>
+            <span class="qty" id="qty-r-colazero">0</span>
+            <button class="btn-plus" onclick="change('r-colazero',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="r-fanta" data-price="1.50" data-name="Fanta">
+          <div class="product-img">🍊</div>
+          <div class="product-info">
+            <h3>Fanta</h3>
+            <span class="price">1,50 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('r-fanta',-1)">−</button>
+            <span class="qty" id="qty-r-fanta">0</span>
+            <button class="btn-plus" onclick="change('r-fanta',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="r-aquarius" data-price="1.50" data-name="Aquarius">
+          <div class="product-img">💧</div>
+          <div class="product-info">
+            <h3>Aquarius</h3>
+            <span class="price">1,50 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('r-aquarius',-1)">−</button>
+            <span class="qty" id="qty-r-aquarius">0</span>
+            <button class="btn-plus" onclick="change('r-aquarius',1)">+</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VINO -->
+    <section class="category-section" id="vino">
+      <h2 class="section-title">🍷 Vinos y Combinados</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="v-tintoverano" data-price="6.00" data-name="Mini Tinto de Verano">
+          <div class="product-img">🍷</div>
+          <div class="product-info">
+            <h3>Mini Tinto Verano</h3>
+            <span class="price">6,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('v-tintoverano',-1)">−</button>
+            <span class="qty" id="qty-v-tintoverano">0</span>
+            <button class="btn-plus" onclick="change('v-tintoverano',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="v-calimocho" data-price="6.00" data-name="Mini Calimocho">
+          <div class="product-img">🍹</div>
+          <div class="product-info">
+            <h3>Mini Calimocho</h3>
+            <span class="price">6,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('v-calimocho',-1)">−</button>
+            <span class="qty" id="qty-v-calimocho">0</span>
+            <button class="btn-plus" onclick="change('v-calimocho',1)">+</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CERVEZA -->
+    <section class="category-section" id="cerveza">
+      <h2 class="section-title">🍺 Cerveza</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="c-sinalcohol" data-price="2.00" data-name="Cerveza Sin Alcohol">
+          <div class="product-img">🫗</div>
+          <div class="product-info">
+            <h3>Sin Alcohol</h3>
+            <span class="price">2,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('c-sinalcohol',-1)">−</button>
+            <span class="qty" id="qty-c-sinalcohol">0</span>
+            <button class="btn-plus" onclick="change('c-sinalcohol',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="c-doble" data-price="3.00" data-name="Cerveza Doble">
+          <div class="product-img">🍺</div>
+          <div class="product-info">
+            <h3>Doble</h3>
+            <span class="price">3,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('c-doble',-1)">−</button>
+            <span class="qty" id="qty-c-doble">0</span>
+            <button class="btn-plus" onclick="change('c-doble',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="c-mini" data-price="6.00" data-name="Mini Cerveza">
+          <div class="product-img">🍻</div>
+          <div class="product-info">
+            <h3>Mini Cerveza</h3>
+            <span class="price">6,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('c-mini',-1)">−</button>
+            <span class="qty" id="qty-c-mini">0</span>
+            <button class="btn-plus" onclick="change('c-mini',1)">+</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MERCHANDISING -->
+    <section class="category-section" id="merch">
+      <h2 class="section-title">👕 Merchandising</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="merch-palestina" data-price="6.00" data-name="Pañuelo Palestina">
+          <div class="product-img">🏳️</div>
+          <div class="product-info">
+            <h3>Palestina</h3>
+            <span class="price">6,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('merch-palestina',-1)">−</button>
+            <span class="qty" id="qty-merch-palestina">0</span>
+            <button class="btn-plus" onclick="change('merch-palestina',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="merch-camvecinal" data-price="12.00" data-name="Camiseta Vecinal">
+          <div class="product-img">👕</div>
+          <div class="product-info">
+            <h3>Camiseta Vecinal</h3>
+            <span class="price">12,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('merch-camvecinal',-1)">−</button>
+            <span class="qty" id="qty-merch-camvecinal">0</span>
+            <button class="btn-plus" onclick="change('merch-camvecinal',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="merch-camsindicato" data-price="12.00" data-name="Camiseta Sindicato Inquilinos">
+          <div class="product-img">✊</div>
+          <div class="product-info">
+            <h3>Camiseta Sindicato</h3>
+            <span class="price">12,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('merch-camsindicato',-1)">−</button>
+            <span class="qty" id="qty-merch-camsindicato">0</span>
+            <button class="btn-plus" onclick="change('merch-camsindicato',1)">+</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- TICKET FLOTANTE -->
+  <div class="ticket-bar" id="ticketBar">
+    <div class="ticket-items" id="ticketItems">
+      <span class="ticket-empty">Añade productos para ver el resumen</span>
+    </div>
+    <div class="ticket-footer">
+      <span class="ticket-total-label">TOTAL:</span>
+      <span class="ticket-total-amount" id="ticketTotal">0,00 €</span>
+      <button class="btn-reset" onclick="resetAll()">🔄 Reiniciar</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
