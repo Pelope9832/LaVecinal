@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Admin — Caseta Vecinal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --rojo: #c0392b;
+      --amarillo: #f39c12;
+      --crema: #fdf6e3;
+      --marron: #5d4037;
+      --texto: #2c1810;
+      --verde: #27ae60;
+      --gris: #ecf0f1;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #1a1a2e;
+      color: #eee;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 16px 60px;
+    }
+
+    /* ── Pantalla de contraseña ── */
+    #loginScreen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      gap: 20px;
+    }
+
+    #loginScreen h1 {
+      font-family: 'Bangers', cursive;
+      font-size: 2.5rem;
+      color: var(--amarillo);
+      letter-spacing: 3px;
+    }
+
+    #loginScreen p { color: #aaa; font-size: 0.9rem; }
+
+    #loginScreen input {
+      padding: 12px 20px;
+      border-radius: 50px;
+      border: 2px solid #444;
+      background: #0f0f1a;
+      color: white;
+      font-size: 1rem;
+      width: 260px;
+      text-align: center;
+      font-family: 'Nunito', sans-serif;
+      outline: none;
+    }
+
+    #loginScreen input:focus { border-color: var(--amarillo); }
+
+    #loginScreen button {
+      padding: 12px 32px;
+      border-radius: 50px;
+      border: none;
+      background: var(--rojo);
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    #loginScreen button:hover { background: #e74c3c; }
+    #loginError { color: #e74c3c; font-size: 0.85rem; display: none; }
+
+    /* ── Panel principal ── */
+    #adminPanel { display: none; width: 100%; max-width: 780px; }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    header h1 {
+      font-family: 'Bangers', cursive;
+      font-size: 2rem;
+      color: var(--amarillo);
+      letter-spacing: 2px;
+    }
+
+    .btn-export {
+      background: var(--verde);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 22px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn-export:hover { opacity: 0.85; }
+
+    /* ── Sección de categoría ── */
+    .admin-section {
+      background: #16213e;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #2a2a4a;
+    }
+
+    .admin-section h2 {
+      font-family: 'Bangers', cursive;
+      font-size: 1.4rem;
+      color: var(--amarillo);
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px dashed #2a2a4a;
+    }
+
+    /* ── Fila de producto ── */
+    .product-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+      background: #0f0f1a;
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    .product-row label {
+      font-size: 0.75rem;
+      color: #888;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .product-row input[type="text"],
+    .product-row input[type="number"] {
+      width: 100%;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #1a1a2e;
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .product-row input:focus { border-color: var(--amarillo); }
+
+    .product-row input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: var(--verde);
+    }
+
+    .btn-del {
+      background: none;
+      border: 1px solid #c0392b55;
+      color: #e74c3c;
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background 0.15s;
+    }
+
+    .btn-del:hover { background: rgba(231,76,60,0.15); }
+
+    .btn-add-product {
+      background: none;
+      border: 2px dashed #444;
+      color: #888;
+      border-radius: 10px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      transition: all 0.15s;
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    .btn-add-product:hover { border-color: var(--amarillo); color: var(--amarillo); }
+
+    /* ── Botones de acción ── */
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .btn-save {
+      background: var(--rojo);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 28px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      box-shadow: 0 3px 12px rgba(192,57,43,0.4);
+    }
+
+    .btn-save:hover { opacity: 0.85; }
+
+    .btn-preview {
+      background: #2a2a4a;
+      color: #aaa;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 24px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .btn-preview:hover { background: #3a3a5a; color: white; }
+
+    /* ── Aviso exportación ── */
+    #exportNotice {
+      background: #0f3460;
+      border: 1px solid #1a6ca8;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #aad4f5;
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    #exportNotice code {
+      background: #0a2540;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.82rem;
+    }
+
+    #exportNotice pre {
+      background: #0a2540;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 10px;
+      overflow-x: auto;
+      font-size: 0.75rem;
+      color: #7ec8e3;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    #saveMsg {
+      color: var(--verde);
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    @media (max-width: 520px) {
+      .product-row { grid-template-columns: 1fr 80px auto; }
+      .product-row > div:nth-child(3) { display: none; } /* oculta emoji en móvil */
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="loginScreen">
+  <h1>🔐 Panel Admin</h1>
+  <p>Introduce la contraseña para continuar</p>
+  <input type="password" id="passwordInput" placeholder="Contraseña..." onkeydown="if(event.key==='Enter') checkPassword()" />
+  <button onclick="checkPassword()">Entrar</button>
+  <span id="loginError">Contraseña incorrecta</span>
+</div>
+
+<!-- ── PANEL ── -->
+<div id="adminPanel">
+
+  <header>
+    <h1>⚙️ Panel de Administración</h1>
+    <a class="btn-preview" href="index.html">← Ver carta</a>
+  </header>
+
+  <div id="exportNotice"></div>
+
+  <div class="actions">
+    <button class="btn-save" onclick="saveAndExport()">💾 Guardar y exportar código</button>
+    <span id="saveMsg">✓ ¡Exportado!</span>
+  </div>
+
+  <div id="categoriesContainer">
+    <!-- Se rellena con JS -->
+  </div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────
+//  CONTRASEÑA ADMIN
+//  Cambia este valor por el que quieras
+// ─────────────────────────────────────────────────────────
+const ADMIN_PASSWORD = 'caseta2025';
+
+function checkPassword() {
+  const input = document.getElementById('passwordInput').value;
+  if (input === ADMIN_PASSWORD) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    initAdmin();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+//  DATOS INICIALES — reflejo exacto del index.html
+//  Edítalos aquí para actualizar el panel
+// ─────────────────────────────────────────────────────────
+let categories = [
+  {
+    id: 'montados', label: '🥖 Montados',
+    products: [
+      { id: 'm-chorizo',  name: 'Montado Chorizo',  price: 4.00, emoji: '🌶️' },
+      { id: 'm-lomo',     name: 'Montado Lomo',     price: 4.00, emoji: '🥩' },
+      { id: 'm-panceta',  name: 'Montado Panceta',  price: 4.00, emoji: '🥓' },
+      { id: 'm-tortilla', name: 'Montado Tortilla', price: 3.50, emoji: '🍳' },
+      { id: 'm-queso',    name: 'Suplemento queso (montado)', price: 0.50, emoji: '🧀' },
+    ]
+  },
+  {
+    id: 'bocadillos', label: '🥪 Bocadillos',
+    products: [
+      { id: 'b-chorizo',  name: 'Bocadillo Chorizo',  price: 5.00, emoji: '🌶️' },
+      { id: 'b-lomo',     name: 'Bocadillo Lomo',     price: 5.00, emoji: '🥩' },
+      { id: 'b-panceta',  name: 'Bocadillo Panceta',  price: 5.00, emoji: '🥓' },
+      { id: 'b-tortilla', name: 'Bocadillo Tortilla', price: 4.00, emoji: '🍳' },
+      { id: 'b-queso',    name: 'Suplemento queso (bocadillo)', price: 0.50, emoji: '🧀' },
+    ]
+  },
+  {
+    id: 'otros', label: '🍔 Otros Platos',
+    products: [
+      { id: 'o-hamburguesa', name: 'Hamburguesa',        price: 5.50, emoji: '🍔' },
+      { id: 'o-hambvegana',  name: 'Hamburguesa Vegana', price: 5.50, emoji: '🌱' },
+      { id: 'o-pincho',      name: 'Pincho Moruno',      price: 3.00, emoji: '🍢' },
+      { id: 'o-queso',       name: 'Suplemento queso (otros)', price: 0.50, emoji: '🧀' },
+    ]
+  },
+  {
+    id: 'refrescos', label: '🥤 Refrescos',
+    products: [
+      { id: 'r-cocacola', name: 'Coca-Cola',      price: 1.50, emoji: '🥤' },
+      { id: 'r-colazero', name: 'Coca-Cola Zero', price: 1.50, emoji: '🖤' },
+      { id: 'r-fanta',    name: 'Fanta',          price: 1.50, emoji: '🍊' },
+      { id: 'r-aquarius', name: 'Aquarius',       price: 1.50, emoji: '💧' },
+    ]
+  },
+  {
+    id: 'vino', label: '🍷 Vinos',
+    products: [
+      { id: 'v-tintoverano', name: 'Mini Tinto de Verano', price: 6.00, emoji: '🍷' },
+      { id: 'v-calimocho',   name: 'Mini Calimocho',       price: 6.00, emoji: '🍹' },
+    ]
+  },
+  {
+    id: 'cerveza', label: '🍺 Cerveza',
+    products: [
+      { id: 'c-sinalcohol', name: 'Cerveza Sin Alcohol', price: 2.00, emoji: '🫗' },
+      { id: 'c-doble',      name: 'Cerveza Doble',       price: 3.00, emoji: '🍺' },
+      { id: 'c-mini',       name: 'Mini Cerveza',        price: 6.00, emoji: '🍻' },
+    ]
+  },
+  {
+    id: 'merch', label: '👕 Merchandising',
+    products: [
+      { id: 'merch-palestina',    name: 'Palestina',                    price: 6.00,  emoji: '🏳️' },
+      { id: 'merch-camvecinal',   name: 'Camiseta Vecinal',             price: 12.00, emoji: '👕' },
+      { id: 'merch-camsindicato', name: 'Camiseta Sindicato Inquilinos', price: 12.00, emoji: '✊' },
+    ]
+  },
+];
+
+// ─────────────────────────────────────────────────────────
+//  RENDERIZAR PANEL
+// ─────────────────────────────────────────────────────────
+function initAdmin() {
+  renderCategories();
+}
+
+function renderCategories() {
+  const container = document.getElementById('categoriesContainer');
+  container.innerHTML = '';
+
+  categories.forEach((cat, ci) => {
+    const section = document.createElement('div');
+    section.className = 'admin-section';
+    section.innerHTML = `<h2>${cat.label}</h2><div class="products-list" id="list-${cat.id}"></div>
+      <button class="btn-add-product" onclick="addProduct(${ci})">+ Añadir producto</button>`;
+    container.appendChild(section);
+
+    cat.products.forEach((p, pi) => renderProductRow(cat.id, ci, pi));
+  });
+}
+
+function renderProductRow(catId, ci, pi) {
+  const listEl = document.getElementById(`list-${catId}`);
+  const p = categories[ci].products[pi];
+
+  const row = document.createElement('div');
+  row.className = 'product-row';
+  row.id = `row-${catId}-${pi}`;
+  row.innerHTML = `
+    <div>
+      <label>Nombre</label>
+      <input type="text" value="${escapeAttr(p.name)}"
+        onchange="categories[${ci}].products[${pi}].name=this.value" />
+    </div>
+    <div>
+      <label>Precio (€)</label>
+      <input type="number" step="0.01" min="0" value="${p.price}"
+        onchange="categories[${ci}].products[${pi}].price=parseFloat(this.value)||0" />
+    </div>
+    <div>
+      <label>Emoji</label>
+      <input type="text" value="${p.emoji}" maxlength="4"
+        onchange="categories[${ci}].products[${pi}].emoji=this.value" />
+    </div>
+    <button class="btn-del" onclick="deleteProduct(${ci},${pi},'${catId}')">✕</button>
+  `;
+  listEl.appendChild(row);
+}
+
+function addProduct(ci) {
+  const cat = categories[ci];
+  const newPi = cat.products.length;
+  const newId = `${cat.id}-nuevo${newPi}`;
+  cat.products.push({ id: newId, name: 'Nuevo producto', price: 0.00, emoji: '🆕' });
+  renderProductRow(cat.id, ci, newPi);
+}
+
+function deleteProduct(ci, pi, catId) {
+  if (!confirm('¿Eliminar este producto?')) return;
+  categories[ci].products.splice(pi, 1);
+  renderCategories(); // re-render completo para reindexar
+}
+
+// ─────────────────────────────────────────────────────────
+//  EXPORTAR CÓDIGO ACTUALIZADO
+// ─────────────────────────────────────────────────────────
+function saveAndExport() {
+  const notice = document.getElementById('exportNotice');
+  const msg    = document.getElementById('saveMsg');
+
+  // Generar fragmento HTML de los productos
+  let sectionsHTML = '';
+
+  categories.forEach(cat => {
+    let cardsHTML = '';
+    cat.products.forEach(p => {
+      const isSupp = p.price < 1;
+      const priceStr = p.price.toLocaleString('es-ES', { minimumFractionDigits: 2 }) + ' €';
+      const prefixedPrice = isSupp ? '+' + priceStr : priceStr;
+      cardsHTML += `
+        <div class="product-card${isSupp ? ' supplement' : ''}" data-id="${p.id}" data-price="${p.price.toFixed(2)}" data-name="${escapeAttr(p.name)}">
+          <div class="product-img">${p.emoji}</div>
+          <div class="product-info">
+            <h3>${escapeHTML(p.name.replace(/.*? /, ''))}</h3>
+            <span class="price">${prefixedPrice}</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('${p.id}',-1)">−</button>
+            <span class="qty" id="qty-${p.id}">0</span>
+            <button class="btn-plus" onclick="change('${p.id}',1)">+</button>
+          </div>
+        </div>`;
+    });
+
+    sectionsHTML += `
+    <section class="category-section" id="${cat.id}">
+      <h2 class="section-title">${cat.label}</h2>
+      <div class="products-grid">${cardsHTML}
+      </div>
+    </section>`;
+  });
+
+  // Generar botones de nav
+  let navHTML = '';
+  const navEmojis = { montados:'🥖', bocadillos:'🥪', otros:'🍔', refrescos:'🥤', vino:'🍷', cerveza:'🍺', merch:'👕' };
+  categories.forEach((cat, i) => {
+    const emoji = navEmojis[cat.id] || '🔖';
+    const label = cat.label.replace(/^.+? /, '');
+    navHTML += `    <button class="nav-btn${i===0?' active':''}" data-target="${cat.id}">${emoji} ${label}</button>\n`;
+  });
+
+  notice.style.display = 'block';
+  notice.innerHTML = `
+    <strong>📋 Instrucciones de actualización</strong><br><br>
+    Hemos generado el nuevo código. Para aplicarlo en tu web tienes dos opciones:<br><br>
+    <strong>Opción A — Fácil (sólo precios cambiados):</strong><br>
+    Edita directamente el archivo <code>index.html</code> buscando el ID del producto
+    (ej: <code>data-id="m-chorizo"</code>) y cambia el valor <code>data-price</code>.<br><br>
+    <strong>Opción B — Completa (productos nuevos/eliminados):</strong><br>
+    Reemplaza el contenido de <code>&lt;nav class="category-nav"&gt;</code>
+    y <code>&lt;main id="mainContent"&gt;</code> en tu <code>index.html</code>
+    con el código generado a continuación:<br>
+    <pre id="exportCode">${escapeHTML('<!-- NAV -->\n' + navHTML + '\n<!-- MAIN -->\n' + sectionsHTML)}</pre>
+    <button onclick="copyCode()" style="background:var(--verde);border:none;color:white;padding:8px 18px;border-radius:50px;cursor:pointer;font-weight:800;margin-top:8px;">📋 Copiar código</button>
+  `;
+
+  msg.style.display = 'inline';
+  setTimeout(() => { msg.style.display = 'none'; }, 2500);
+  notice.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function copyCode() {
+  const code = document.getElementById('exportCode');
+  if (code) navigator.clipboard.writeText(code.innerText);
+}
+
+// ─────────────────────────────────────────────────────────
+//  Utils
+// ─────────────────────────────────────────────────────────
+function escapeHTML(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escapeAttr(str) {
+  return String(str).replace(/"/g,'&quot;').replace(/</g,'&lt;');
+}
+</script>
+</body>
+</html>
