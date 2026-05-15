@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#c0392b" />
-  <meta name="description" content="Caseta de La Vecinal — Carta y Calculadora de precios · Bilbao" />
-  <title>La Vecinal 🎉 · Bilbao</title>
+  <meta name="description" content="Caseta de La Vecinal — Carta y Calculadora de precios" />
+  <title>La Vecinal 🎉</title>
   <!-- Favicon emoji 🎉 — funciona en todos los navegadores modernos -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎉</text></svg>" />
   <link rel="manifest" href="manifest.json" />
@@ -24,7 +24,8 @@
         <!-- <div class="header-logo-placeholder" aria-hidden="true">🏘️</div> -->
         <div class="header-text">
           <h1>La Vecinal</h1>
-          <p class="tagline">Somos de <s>barrio bien</s> bien de barrio · Asociación de Vecinos Barrio de Bilbao</p>
+          <p class="tagline"><i>Somos de <s>barrio bien</s> bien de barrio</i> · Asociación de Vecinos Barrio de Bilbao</p>
+          <p class="tagline">Esta web es una carta de precios. No sirve para pedir</p>
         </div>
       </div>
       <div class="total-badge" id="totalBadge">
@@ -61,6 +62,19 @@
             <button class="btn-minus" onclick="change('m-chorizo',-1)">−</button>
             <span class="qty" id="qty-m-chorizo">0</span>
             <button class="btn-plus" onclick="change('m-chorizo',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="m-morcilla" data-price="4.00" data-name="Montado Morcilla">
+          <div class="product-img">🌶️</div>
+          <div class="product-info">
+            <h3>Morcilla</h3>
+            <span class="price">4,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('m-morcilla',-1)">−</button>
+            <span class="qty" id="qty-m-chorizo">0</span>
+            <button class="btn-plus" onclick="change('m-morcilla',1)">+</button>
           </div>
         </div>
 
@@ -134,6 +148,19 @@
             <button class="btn-minus" onclick="change('b-chorizo',-1)">−</button>
             <span class="qty" id="qty-b-chorizo">0</span>
             <button class="btn-plus" onclick="change('b-chorizo',1)">+</button>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="b-morcilla" data-price="5.00" data-name="Bocadillo Morcilla">
+          <div class="product-img">🌶️</div>
+          <div class="product-info">
+            <h3>Chorizo</h3>
+            <span class="price">5,00 €</span>
+          </div>
+          <div class="product-controls">
+            <button class="btn-minus" onclick="change('b-morcilla',-1)">−</button>
+            <span class="qty" id="qty-b-chorizo">0</span>
+            <button class="btn-plus" onclick="change('b-morcilla',1)">+</button>
           </div>
         </div>
 
